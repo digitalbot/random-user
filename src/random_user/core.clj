@@ -7,16 +7,14 @@
   [n]
   (let [url "http://api.randomuser.me/"
         client (http/create-client)]
-    (map (fn [res]
-           (-> res http/await http/string))
-         (for [i (range n)] (http/GET client url)))
-    ))
+    (map #(-> % http/await http/string)
+         (for [i (range n)] (http/GET client url)))))
 
 (defn get-random-dummy-user-json
   "get user from http://randomuser.me/"
   []
   (with-open [client (http/create-client)]
-    (let [resp (http/GET client "http://api.randomuser.me/" :timeout 500)]
+    (let [resp (http/GET client "http://api.randomuser.me/" :timeout 1000)]
       (http/await resp)
       (if (http/failed? resp)
         (println "error")
